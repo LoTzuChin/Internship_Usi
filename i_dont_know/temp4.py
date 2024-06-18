@@ -1,0 +1,33 @@
+import os
+import shutil
+
+def organize_folders(root_dir):
+    done_dir = os.path.join(root_dir, 'done')
+    if not os.path.exists(done_dir):
+        os.makedirs(done_dir)
+
+    for dirpath, dirnames, filenames in os.walk(root_dir):
+        for dirname in dirnames:
+            if dirname.endswith('_pic'):
+                pic_dir = os.path.join(dirpath, dirname)
+                new_folder = os.path.join(done_dir, os.path.relpath(dirpath, root_dir).lstrip('./'), dirname)
+                if not os.path.exists(new_folder):
+                    os.makedirs(new_folder)
+                for pic_file in os.listdir(pic_dir):
+                    shutil.move(os.path.join(pic_dir, pic_file), new_folder)
+                if not os.listdir(pic_dir):
+                    os.rmdir(pic_dir)
+
+            if dirname.endswith('_xml'):
+                xml_dir = os.path.join(dirpath, dirname)
+                new_folder = os.path.join(done_dir, os.path.relpath(dirpath, root_dir).lstrip('./'), dirname)
+                if not os.path.exists(new_folder):
+                    os.makedirs(new_folder)
+                for xml_file in os.listdir(xml_dir):
+                    shutil.move(os.path.join(xml_dir, xml_file), new_folder)
+                if not os.listdir(xml_dir):
+                    os.rmdir(xml_dir)
+
+if __name__ == "__main__":
+    root_directory = "test"
+    organize_folders(root_directory)
